@@ -100,9 +100,11 @@ ALTER TABLE aws_input ADD COLUMN id serial;
 
 -- CSVs
 CREATE TABLE aws_test_sample AS SELECT * from aws_input order by random() limit 2000000;
-CREATE TABLE aws_validate_sample as SELECT * from aws_input where id not in (select id from aws_test_sample);
+CREATE TABLE aws_validate_sample as SELECT * from aws_input except select * from aws_test_sample;
 
 \copy aws_test_sample to ~/git_sukic/hackaton2017/aws_test_sample.csv with (format csv, header true) 
+\copy aws_validate_sample to ~/git_sukic/hackaton2017/aws_validate_sample.csv with (format csv, header true) 
+
 
 
 
