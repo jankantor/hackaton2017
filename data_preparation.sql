@@ -163,7 +163,7 @@ CREATE TABLE aws_test_sample AS SELECT
  big6,
  big7,
  big8,
- visit,
+ coalesce(visit,0) visit,
  distance,
  id,
  age
@@ -190,7 +190,7 @@ CREATE TABLE aws_validate_sample as SELECT
  big6,
  big7,
  big8,
- visit,
+ coalesce(visit,0) visit,
  distance,
  id,
  age
@@ -215,7 +215,7 @@ CREATE TABLE aws_validate_sample as SELECT
  big6,
  big7,
  big8,
- visit,
+ coalesce(visit,0) visit,
  distance,
  id,
  age
