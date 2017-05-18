@@ -71,33 +71,33 @@ where lon is not null
     AND right(orgh_code,3) != 'XNA';
 
 
-alter table z16028_cs_navstevy.aws_input_tmp add column big1 character varying(1);
-alter table z16028_cs_navstevy.aws_input_tmp add column big2 character varying(1);
-alter table z16028_cs_navstevy.aws_input_tmp add column big3 character varying(1);
-alter table z16028_cs_navstevy.aws_input_tmp add column big4 character varying(1);
-alter table z16028_cs_navstevy.aws_input_tmp add column big5 character varying(1);
-alter table z16028_cs_navstevy.aws_input_tmp add column big6 character varying(1);
-alter table z16028_cs_navstevy.aws_input_tmp add column big7 character varying(1);
-alter table z16028_cs_navstevy.aws_input_tmp add column big8 character varying(1);
-alter table z16028_cs_navstevy.aws_input_tmp add column visit integer;
+alter table aws_input_tmp add column big1 character varying(1);
+alter table aws_input_tmp add column big2 character varying(1);
+alter table aws_input_tmp add column big3 character varying(1);
+alter table aws_input_tmp add column big4 character varying(1);
+alter table aws_input_tmp add column big5 character varying(1);
+alter table aws_input_tmp add column big6 character varying(1);
+alter table aws_input_tmp add column big7 character varying(1);
+alter table aws_input_tmp add column big8 character varying(1);
+alter table aws_input_tmp add column visit integer;
 
-update z16028_cs_navstevy.aws_input_tmp set visit = 1 where servis > 0 or hotovost>0 or prodej>0 ;
+update aws_input_tmp set visit = 1 where servis > 0 or hotovost>0 or prodej>0 ;
 
-update z16028_cs_navstevy.aws_input_tmp set big1 = substring(big8_unified_id,1,1);
-update z16028_cs_navstevy.aws_input_tmp set big2 = substring(big8_unified_id,2,1);
-update z16028_cs_navstevy.aws_input_tmp set big3 = substring(big8_unified_id,3,1);
-update z16028_cs_navstevy.aws_input_tmp set big4 = substring(big8_unified_id,4,1);
-update z16028_cs_navstevy.aws_input_tmp set big5 = substring(big8_unified_id,5,1);
-update z16028_cs_navstevy.aws_input_tmp set big6 = substring(big8_unified_id,6,1);
-update z16028_cs_navstevy.aws_input_tmp set big7 = substring(big8_unified_id,7,1);
-update z16028_cs_navstevy.aws_input_tmp set big8 = substring(big8_unified_id,8,1);
+update aws_input_tmp set big1 = substring(big8_unified_id,1,1);
+update aws_input_tmp set big2 = substring(big8_unified_id,2,1);
+update aws_input_tmp set big3 = substring(big8_unified_id,3,1);
+update aws_input_tmp set big4 = substring(big8_unified_id,4,1);
+update aws_input_tmp set big5 = substring(big8_unified_id,5,1);
+update aws_input_tmp set big6 = substring(big8_unified_id,6,1);
+update aws_input_tmp set big7 = substring(big8_unified_id,7,1);
+update aws_input_tmp set big8 = substring(big8_unified_id,8,1);
 
 
-alter table z16028_cs_navstevy.aws_input_tmp drop column big8_unified_id ;
-alter table z16028_cs_navstevy.aws_input_tmp drop column bigmse_unified_id ;
-alter table z16028_cs_navstevy.aws_input_tmp drop column prodej ;
-alter table z16028_cs_navstevy.aws_input_tmp drop column servis ;
-alter table z16028_cs_navstevy.aws_input_tmp drop column hotovost ;
+alter table aws_input_tmp drop column big8_unified_id ;
+alter table aws_input_tmp drop column bigmse_unified_id ;
+alter table aws_input_tmp drop column prodej ;
+alter table aws_input_tmp drop column servis ;
+alter table aws_input_tmp drop column hotovost ;
 
 create index on aws_input_tmp (id_pobocky);
 
@@ -126,9 +126,100 @@ DROP TABLE aws_input_tmp;
 ALTER TABLE aws_input ADD COLUMN id serial;
 
 
+-- add age
+ALTER TABLE aws_input ADD COLUMN age INTEGER;
+UPDATE aws_input SET age =
+   CASE WHEN 2017 - pth_birth_year::INTEGER < 15 THEN 15
+        WHEN 2017 - pth_birth_year::INTEGER >= 15 AND 2017 - pth_birth_year::INTEGER < 20 THEN 20
+
+        WHEN 2017 - pth_birth_year::INTEGER >= 20 AND 2017 - pth_birth_year::INTEGER < 30 THEN 30
+        WHEN 2017 - pth_birth_year::INTEGER >= 30 AND 2017 - pth_birth_year::INTEGER < 40 THEN 40
+        WHEN 2017 - pth_birth_year::INTEGER >= 40 AND 2017 - pth_birth_year::INTEGER < 50 THEN 50
+        WHEN 2017 - pth_birth_year::INTEGER >= 50 AND 2017 - pth_birth_year::INTEGER < 60 THEN 60
+        WHEN 2017 - pth_birth_year::INTEGER >= 60 THEN 100
+    END;
+
+
+
 -- CSVs
-CREATE TABLE aws_test_sample AS SELECT * from aws_input order by random() limit 2000000;
-CREATE TABLE aws_validate_sample as SELECT * from aws_input except select * from aws_test_sample;
+CREATE TABLE aws_test_sample AS SELECT 
+ pt_unified_key,
+ pttp_unified_id,
+ psgen_unified_id,
+ og_unified_id,
+ sb_unified_id,
+ pv_unified_id,
+ ptstat_unified_id,
+ active_b24_internetbank_flag,
+ active_s24_internetbank_flag,
+ active_telebank_flag,
+ active_gsmbank_flag,
+ active_mobilebank_flag,
+ big1,
+ big2,
+ big3,
+ big4,
+ big5,
+ big6,
+ big7,
+ big8,
+ visit,
+ distance,
+ id,
+ age
+ from aws_input order by random() limit 2000000;
+
+CREATE TABLE aws_validate_sample as SELECT
+ pt_unified_key,
+ pttp_unified_id,
+ psgen_unified_id,
+ og_unified_id, 
+ sb_unified_id,
+ pv_unified_id,
+ ptstat_unified_id,
+ active_b24_internetbank_flag,
+ active_s24_internetbank_flag,
+ active_telebank_flag,
+ active_gsmbank_flag,
+ active_mobilebank_flag,
+ big1,
+ big2,
+ big3,
+ big4,
+ big5,
+ big6,
+ big7,
+ big8,
+ visit,
+ distance,
+ id,
+ age
+ from aws_input except select 
+ pt_unified_key,
+ pttp_unified_id,
+ psgen_unified_id,
+ og_unified_id, 
+ sb_unified_id,
+ pv_unified_id,
+ ptstat_unified_id,
+ active_b24_internetbank_flag,
+ active_s24_internetbank_flag,
+ active_telebank_flag,
+ active_gsmbank_flag,
+ active_mobilebank_flag,
+ big1,
+ big2,
+ big3,
+ big4,
+ big5,
+ big6,
+ big7,
+ big8,
+ visit,
+ distance,
+ id,
+ age
+ from aws_test_sample;
 
 \copy aws_test_sample to ~/git_sukic/hackaton2017/aws_test_sample.csv with (format csv, header true) 
 \copy aws_validate_sample to ~/git_sukic/hackaton2017/aws_validate_sample.csv with (format csv, header true) 
