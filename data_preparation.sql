@@ -71,6 +71,34 @@ where lon is not null
     AND right(orgh_code,3) != 'XNA';
 
 
+alter table z16028_cs_navstevy.aws_input_tmp add column big1 character varying(1);
+alter table z16028_cs_navstevy.aws_input_tmp add column big2 character varying(1);
+alter table z16028_cs_navstevy.aws_input_tmp add column big3 character varying(1);
+alter table z16028_cs_navstevy.aws_input_tmp add column big4 character varying(1);
+alter table z16028_cs_navstevy.aws_input_tmp add column big5 character varying(1);
+alter table z16028_cs_navstevy.aws_input_tmp add column big6 character varying(1);
+alter table z16028_cs_navstevy.aws_input_tmp add column big7 character varying(1);
+alter table z16028_cs_navstevy.aws_input_tmp add column big8 character varying(1);
+alter table z16028_cs_navstevy.aws_input_tmp add column visit integer;
+
+update z16028_cs_navstevy.aws_input_tmp set visit = 1 where servis > 0 or hotovost>0 or prodej>0 ;
+
+update z16028_cs_navstevy.aws_input_tmp set big1 = substring(big8_unified_id,1,1);
+update z16028_cs_navstevy.aws_input_tmp set big2 = substring(big8_unified_id,2,1);
+update z16028_cs_navstevy.aws_input_tmp set big3 = substring(big8_unified_id,3,1);
+update z16028_cs_navstevy.aws_input_tmp set big4 = substring(big8_unified_id,4,1);
+update z16028_cs_navstevy.aws_input_tmp set big5 = substring(big8_unified_id,5,1);
+update z16028_cs_navstevy.aws_input_tmp set big6 = substring(big8_unified_id,6,1);
+update z16028_cs_navstevy.aws_input_tmp set big7 = substring(big8_unified_id,7,1);
+update z16028_cs_navstevy.aws_input_tmp set big8 = substring(big8_unified_id,8,1);
+
+
+alter table z16028_cs_navstevy.aws_input_tmp drop column big8_unified_id ;
+alter table z16028_cs_navstevy.aws_input_tmp drop column bigmse_unified_id ;
+alter table z16028_cs_navstevy.aws_input_tmp drop column prodej ;
+alter table z16028_cs_navstevy.aws_input_tmp drop column servis ;
+alter table z16028_cs_navstevy.aws_input_tmp drop column hotovost ;
+
 create index on aws_input_tmp (id_pobocky);
 
 
